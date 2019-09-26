@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, AsyncStorage, FlatList } from "react-native";
+import { View, StyleSheet, AsyncStorage, FlatList, Modal, TouchableHighlight, Button } from "react-native";
 import init from 'react_native_mqtt';
 import Images from '../constants/Images';
 import Colors from '../constants/Colors';
@@ -40,8 +40,17 @@ export default class SensorMain extends React.Component {
       soapValue: null,
       alcoholValue: null,
       dataSource: {},
+      modalVisible: false,
+      openedBy: null,
     }
   };
+
+  setModalVisible(visible, openedBy) {
+    this.setState({
+      modalVisible: visible,
+      openedBy
+    });
+  }
 
   onConnect = () => {
     const { client } = this.state;
@@ -64,46 +73,49 @@ export default class SensorMain extends React.Component {
   decodeMessage = message => {
     let direction = message._getDestinationName();
     let value = message._getPayloadString().split(',');
+    let date = value[0] + " " + value[1];
     let minVal;
     let maxVal;
-    console.log(value);
     switch (direction) {
       case '/user1/weight':
         minVal = 132933;
         maxVal = 142020;
         this.setState({
-          paperValue: (((maxVal - minVal) / (+value[2] - minVal)) * 100).toFixed(2)
+          paperValue: (((maxVal - minVal) / (+value[2] - minVal)) * 100).toFixed(2),
+          paperDate: date
         });
         break;
       case '/user1/ultrasonic/1':
         maxVal = 13477;
         minVal = 114007;
         this.setState({
-          alcoholValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2)
+          alcoholValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2),
+          alcoholDate: date
         });
         break;
       case '/user1/ultrasonic/2':
         maxVal = 13477;
         minVal = 114007;
         this.setState({
-          soapValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2)
+          soapValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2),
+          soapDate: date
         });
         break;
     }
   }
 
-  renderSensorData(name, sensorValue, mediaImage) {
+  renderSensorData(name, sensorValue, mediaImage, date) {
     return (
       <SensorData
         value={sensorValue}
         name={name}
         mediaImage={Images.BathIcons[mediaImage]}
+        date={date}
       />
     );
   };
 
-  componentDidMount() {
-    var that = this;
+  render() {
     let items = [
       this.renderSensorData(
         "Jabón Líquido",
@@ -124,19 +136,27 @@ export default class SensorMain extends React.Component {
         this.state.paperDate
       )
     ]
-    that.setState({
-      dataSource: items,
-    });
-  }
-
-  render() {
     return (
       <View style={styles.mainWindow}>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <Button onPress={() => { this.setModalVisible(!this.state.modalVisible) }} title={this.state.openedBy} />
+        </Modal>
         <FlatList
-          data={this.state.dataSource}
+          data={items}
           renderItem={({ item }) => (
-            <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-              {item}
+            <View style={{ flex: 1, flexDirection: 'column', margin: 10 }}>
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible, item.props.name);
+                }}>
+                {item}
+              </TouchableHighlight>
             </View>
           )}
           //Setting the number of column
@@ -149,7 +169,15 @@ export default class SensorMain extends React.Component {
 }
 
 SensorMain.navigationOptions = {
-  title: 'Control de Baños'
+  title: 'Control de Baños',
+  headerStyle: {
+    backgroundColor: Colors.tabBar,
+  },
+  headerTintColor: Colors.tintColor,
+  headerTitleStyle: {
+    fontWeight: 'bold',
+    fontSize: 25
+  },
 };
 
 let styles = StyleSheet.create({
