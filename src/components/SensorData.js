@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import * as Progress from 'react-native-progress';
 
 const SensorData = props => (
   <View style={styles.sensor}>
@@ -9,7 +10,8 @@ const SensorData = props => (
     />
     <View style={styles.levelInfo}>
       <Text style={styles.header2}>{props.name}</Text>
-      <Text style={styles.downText}>{props.value ? ("Nivel: " + props.value) + "%" : "Sin conexión con el broker"}</Text>
+      {!props.value && <Text style={styles.centered, {textAlign: 'center'}}>Sin conexión con el broker</Text>}
+      {props.value && <Progress.Circle showsText={true} progress={props.value} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>}
       <Text style={styles.downText}>{props.value && "Ultima vez actualizado"}</Text>
       <Text style={styles.downText}>{props.value && props.date}</Text>
     </View>
@@ -40,6 +42,10 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+  },
+  centered: {
+    alignItems: 'center',
+    alignContent: 'center'
   }
 });
 

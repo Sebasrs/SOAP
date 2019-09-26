@@ -76,28 +76,44 @@ export default class SensorMain extends React.Component {
     let date = value[0] + " " + value[1];
     let minVal;
     let maxVal;
+    let valueCheck;
     switch (direction) {
       case '/user1/weight':
-        minVal = 132933;
-        maxVal = 142020;
+        minVal = 134128;
+        maxVal = 143350;
+        valueCheck = (+value[2] - minVal)/(maxVal - minVal);
+        valueCheck = (valueCheck < 0) ? 0.001 : valueCheck;
+        if(valueCheck > 1){
+          valueCheck = 0.999
+        }
         this.setState({
-          paperValue: (((maxVal - minVal) / (+value[2] - minVal)) * 100).toFixed(2),
+          paperValue: valueCheck,
           paperDate: date
         });
         break;
       case '/user1/ultrasonic/1':
-        maxVal = 13477;
-        minVal = 114007;
+        maxVal = 15;
+        minVal = 2;
+        valueCheck = Math.abs(1 - ((+value[2] - minVal)/(maxVal - minVal)));
+        valueCheck = (valueCheck < 0) ? 0.001 : valueCheck;
+        if(valueCheck > 1){
+          valueCheck = 0.999
+        }
         this.setState({
-          alcoholValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2),
+          alcoholValue: valueCheck,
           alcoholDate: date
         });
         break;
       case '/user1/ultrasonic/2':
-        maxVal = 13477;
-        minVal = 114007;
-        this.setState({
-          soapValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2),
+        maxVal = 15;
+        minVal = 2;
+        valueCheck = Math.abs(1 - ((+value[2] - minVal)/(maxVal - minVal)));
+        valueCheck = (valueCheck < 0) ? 0.001 : valueCheck;
+        if(valueCheck > 1){
+          valueCheck = 0.999
+        }
+        this.setState({ 
+          soapValue: valueCheck,
           soapDate: date
         });
         break;
@@ -138,29 +154,13 @@ export default class SensorMain extends React.Component {
     ]
     return (
       <View style={styles.mainWindow}>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <Button onPress={() => { this.setModalVisible(!this.state.modalVisible) }} title={this.state.openedBy} />
-        </Modal>
         <FlatList
           data={items}
           renderItem={({ item }) => (
             <View style={{ flex: 1, flexDirection: 'column', margin: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible, item.props.name);
-                }}
-              > 
-                {item}
-              </TouchableOpacity>
+              {item}
             </View>
           )}
-          //Setting the number of column
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
         />
