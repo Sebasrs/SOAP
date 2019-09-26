@@ -4,7 +4,7 @@ import {
   View,
   FlatList,
   Image,
-  TouchableHighlight,
+  TouchableOpacity,
   Text
 } from 'react-native';
 import { Header } from 'react-native-elements';
@@ -41,9 +41,11 @@ export default class GridStart extends Component {
           data={this.state.dataSource}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
-              <TouchableHighlight onPress={() => { this.props.navigation.navigate("Main") }}>
+              <TouchableOpacity
+                onPress={() => { this.props.navigation.navigate("Main") }}
+              >
                 <Image style={styles.imageThumbnail} source={Images.BathIcons.toilet} />
-              </TouchableHighlight>
+              </TouchableOpacity>
               <Text style={styles.description}>Control de baños</Text>
             </View>
           )}
@@ -74,15 +76,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 0.5,
     maxWidth: '50%',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-
-    elevation: 11,
   },
   description: {
     fontWeight: 'bold',
