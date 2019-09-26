@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 
 require('./routes/historyRoutes')(app, history);
 require('./routes/employeeRoutes')(app, employee);
+require('./mqttLogic/mqtt')(app);
 
 app.listen(port, ()  => {
   console.log(`Listening on port ${port}`)
