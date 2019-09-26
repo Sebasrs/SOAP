@@ -14,14 +14,15 @@ export default function TabBarIcon(props) {
           <Text style={styles.header2}>Hora: {props.time}</Text>
         </View>
       </View>
+      {console.log()}
       <View style={styles.levels}>
         <Text style={{alignSelf: 'flex-start', fontSize: 17, fontWeight: 'bold'}}>Niveles</Text>
         <Text style={styles.header2}>Papel Higiénico:</Text>
-        <Progress.Circle showsText={true} progress={(Number(props.paper))} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
+        <Progress.Circle showsText={true} progress={((props.paper - 134128)/(143350 - 134128)) < 0 ? 0.001 : (((props.paper - 134128)/(143350 - 134128)) > 1) ? 0.999 : (props.paper - 134128)/(143350 - 134128)} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
         <Text style={styles.header2}>Jabón Líquido:</Text>
-        <Progress.Circle showsText={true} progress={Number(props.soap)} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
+        <Progress.Circle showsText={true} progress={(Math.abs(1 - (props.soap - 2)/(15-2))) < 0 ? 0.001 : ((Math.abs(1 - (props.soap - 2)/(15-2))) > 1 ? 0.999 : Math.abs(1 - (props.soap - 2)/(15-2)))} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
         <Text style={styles.header2}>Alcohol en gel:</Text>
-        <Progress.Circle showsText={true} progress={Number(props.alcohol)} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
+        <Progress.Circle showsText={true} progress={(Math.abs(1 - (props.alcohol - 2)/(15-2))) < 0 ? 0.001 : ((Math.abs(1 - (props.alcohol - 2)/(15-2))) > 1 ? 0.999 : Math.abs(1 - (props.alcohol - 2)/(15-2)))} size={100} style={styles.centered, {paddingVertical:3}} color="#000"/>
       </View>
     </View>
   );
