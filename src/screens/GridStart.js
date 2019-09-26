@@ -5,23 +5,25 @@ import {
   StyleSheet,
   View,
   FlatList,
-  ActivityIndicator,
   Image,
   TouchableHighlight,
+  Text
 } from 'react-native';
 //import all the components we will need
- 
+import Images from '../constants/Images';
+
 export default class GridStart extends Component {
-  constructor() {
-    super();
+  
+  constructor(props) {
+    super(props);
     this.state = {
       dataSource: {},
     };
   }
   componentDidMount() {
     var that = this;
-    let items = Array.apply(null, Array(50)).map((v, i) => {
-      return { id: i, src: 'http://placehold.it/200x200?text=' + (i + 1) };
+    let items = Array.apply(null, Array(1)).map((v, i) => {
+      return { id: i };
     });
     that.setState({
       dataSource: items,
@@ -33,12 +35,12 @@ export default class GridStart extends Component {
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) => (
-            <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-              <TouchableHighlight onPress={() => {this.props.navigation.navigate("Main")}}>
-                <Image style={styles.imageThumbnail} source={{ uri: 'https://cdn3.iconfinder.com/data/icons/frigicon/100/icon_yuluck-07-512.png' }} />
+            <View style={styles.itemContainer}>
+              <TouchableHighlight onPress={() => { this.props.navigation.navigate("Main") }}>
+                <Image style={styles.imageThumbnail} source={Images.BathIcons.toilet} />
               </TouchableHighlight>
+              <Text style={styles.description}>Control de baños</Text>
             </View>
-
           )}
           //Setting the number of column
           numColumns={2}
@@ -48,16 +50,29 @@ export default class GridStart extends Component {
     );
   }
 }
- 
+
 const styles = StyleSheet.create({
   MainContainer: {
     justifyContent: 'center',
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 20
   },
   imageThumbnail: {
+    height: 200,
+    width: 200
+  },
+  itemContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    maxWidth:'50%'
   },
+  description: {
+    fontWeight: 'bold',
+    fontSize: 15
+  }
 });

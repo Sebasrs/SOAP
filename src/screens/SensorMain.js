@@ -1,6 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, AsyncStorage } from "react-native";
+import { View, StyleSheet, AsyncStorage, FlatList } from "react-native";
 import init from 'react_native_mqtt';
+import Images from '../constants/Images';
+import Colors from '../constants/Colors';
 
 import SensorData from "../components/SensorData";
 
@@ -10,10 +12,10 @@ init({
   defaultExpires: 1000 * 3600 * 24,
   enableCache: true,
   reconnect: true,
-  sync : {
+  sync: {
   }
 });
- 
+
 export default class SensorMain extends React.Component {
   constructor(props) {
     super(props);
@@ -23,20 +25,21 @@ export default class SensorMain extends React.Component {
     client.onMessageArrived = this.decodeMessage;
 
     let options = {
-      useSSL : true,
-      userName : "fpwzfqeg",
-      password : "5ynwWEtuwmvs",
-      onSuccess : this.onConnect,
-      onFailure : this.doFail
+      useSSL: true,
+      userName: "fpwzfqeg",
+      password: "5ynwWEtuwmvs",
+      onSuccess: this.onConnect,
+      onFailure: this.doFail
     }
-    
+
     client.connect(options);
 
     this.state = {
-      paperValue : null,
+      paperValue: null,
       client,
-      soapValue : null,
-      alcoholValue : null
+      soapValue: null,
+      alcoholValue: null,
+      dataSource: {},
     }
   };
 
@@ -47,14 +50,14 @@ export default class SensorMain extends React.Component {
     client.subscribe('/user1/ultrasonic/1');
     client.subscribe('/user1/ultrasonic/2');
   };
-  
+
   doFail = () => {
     console.log("Failed");
   };
-  
+
   onConnectionLost = responseObject => {
     if (responseObject.errorCode !== 0) {
-      console.log("onConnectionLost:"+responseObject.errorMessage);
+      console.log("onConnectionLost:" + responseObject.errorMessage);
     }
   };
 
@@ -64,26 +67,26 @@ export default class SensorMain extends React.Component {
     let minVal;
     let maxVal;
     console.log(value);
-    switch(direction) {
+    switch (direction) {
       case '/user1/weight':
         minVal = 132933;
         maxVal = 142020;
         this.setState({
-          paperValue : (((maxVal - minVal)/(+value[2] - minVal))*100).toFixed(2)
+          paperValue: (((maxVal - minVal) / (+value[2] - minVal)) * 100).toFixed(2)
         });
         break;
       case '/user1/ultrasonic/1':
         maxVal = 13477;
         minVal = 114007;
         this.setState({
-          alcoholValue : ((maxVal - minVal)/(+value[2] - minVal)).toFixed(2)
+          alcoholValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2)
         });
         break;
       case '/user1/ultrasonic/2':
         maxVal = 13477;
         minVal = 114007;
         this.setState({
-          soapValue : ((maxVal - minVal)/(+value[2] - minVal)).toFixed(2)
+          soapValue: ((maxVal - minVal) / (+value[2] - minVal)).toFixed(2)
         });
         break;
     }
@@ -94,31 +97,52 @@ export default class SensorMain extends React.Component {
       <SensorData
         value={sensorValue}
         name={name}
-        mediaImage={mediaImage}
+        mediaImage={Images.BathIcons[mediaImage]}
       />
     );
   };
 
+  componentDidMount() {
+    var that = this;
+    let items = [
+      this.renderSensorData(
+        "Jabón Líquido",
+        this.state.soapValue,
+        "soap",
+        this.state.soapDate
+      ),
+      this.renderSensorData(
+        "Alcohol en Gel",
+        this.state.alcoholValue,
+        "alcohol",
+        this.state.alcoholDate
+      ),
+      this.renderSensorData(
+        "Papel Higiénico",
+        this.state.paperValue,
+        "toiletPaper",
+        this.state.paperDate
+      )
+    ]
+    that.setState({
+      dataSource: items,
+    });
+  }
+
   render() {
     return (
       <View style={styles.mainWindow}>
-        <View>
-          {this.renderSensorData(
-            "Papel Higiénico",
-            this.state.paperValue,
-            "https://image.flaticon.com/icons/png/512/94/94544.png"
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({ item }) => (
+            <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+              {item}
+            </View>
           )}
-          {this.renderSensorData(
-            "Alcohol en Gel",
-            this.state.alcoholValue,
-            "https://diper.cl/wp-content/uploads/2017/07/Dispensador-de-jabon-espuma.png"
-          )}
-          {this.renderSensorData(
-            "Jabón Líquido",
-            this.state.soapValue,
-            "http://www.marcasfamosas.com.uy/wp-content/uploads/2014/07/FD-9241.png"
-          )}
-        </View>
+          //Setting the number of column
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     );
   }
@@ -129,11 +153,9 @@ SensorMain.navigationOptions = {
 };
 
 let styles = StyleSheet.create({
-  mainWindow : {
-    flex : 1,
-    justifyContent : 'center',
-    flexDirection : 'column',
-    alignItems : 'center',
-    fontSize : 20
+  mainWindow: {
+    backgroundColor: Colors.backgroundColor,
+    justifyContent: 'center',
+    flex: 1,
   }
 });

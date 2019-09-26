@@ -4,32 +4,41 @@ import { View, Text, Image, StyleSheet } from "react-native";
 const SensorData = props => (
   <View style={styles.sensor}>
     <Image
-      style={{width: 110, height: 110}}
-      source={{uri: props.mediaImage}}
+      style={styles.beautyIcon}
+      source={props.mediaImage}
     />
-    <View style={styles.column}>
-      <Text style={{fontSize : 24, fontWeight:'bold'}}>{props.name}</Text>
-      <Text style={{fontSize : 21}}>{props.value ? ("Nivel: " + props.value) + "%" : "Sin conexión con el broker"}</Text>
-      <Text style={{fontSize : 21}}>{props.value && "Ultima vez actualizado"}</Text>
-      <Text style={{fontSize : 21}}>{props.value && "2/9/2019 2:30AM"}</Text>
+    <View style={styles.levelInfo}>
+      <Text style={styles.header2}>{props.name}</Text>
+      <Text style={styles.downText}>{props.value ? ("Nivel: " + props.value) + "%" : "Sin conexión con el broker"}</Text>
+      <Text style={styles.downText}>{props.value && "Ultima vez actualizado"}</Text>
+      <Text style={styles.downText}>{props.value && props.date}</Text>
     </View>
   </View>
 );
 
 let styles = StyleSheet.create({
-  sensor : {
+  sensor: {
     borderRadius: 4,
     borderWidth: 0.5,
-    borderColor: '#d6d7da',
-    padding : 10,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection : 'row'
   },
-  column : {
-    flexDirection : 'column',
+  downText: {
+    fontSize: 15
+  },
+  header2: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  beautyIcon: {
+    height: 200,
+    width: 200
+  },
+  levelInfo: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    alignContent: 'center',
+    textAlign: 'center'
   }
 });
 
