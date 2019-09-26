@@ -74,15 +74,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 0.5,
     maxWidth: '50%',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-
-    elevation: 11,
   },
   description: {
     fontWeight: 'bold',

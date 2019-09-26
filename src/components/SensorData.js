@@ -22,15 +22,6 @@ let styles = StyleSheet.create({
     borderWidth: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-
-    elevation: 11,
   },
   downText: {
     fontSize: 15,
