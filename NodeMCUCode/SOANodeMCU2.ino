@@ -3,9 +3,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
-// defines pins numbers
-const int trigPin = D1;  //D8
-const int echoPin = D0;  //D3
+const int trigPin = D1;  
+const int echoPin = D0;  
 const int trigPin2 = D3;
 const int echoPin2 = D2;
 
@@ -30,19 +29,15 @@ int getDistanceFirstSensor() {
   long duration;
   int distance;
   
-  // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   
-  // Sets the trigPin on HIGH state for 10 micro seconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   
-  // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin, HIGH);
   
-  // Calculating the distance
   distance = duration * 0.034/2;
 
   return distance;
@@ -53,19 +48,15 @@ int getDistanceSecondSensor() {
   long duration;
   int distance;
   
-  // Clears the trigPin
   digitalWrite(trigPin2, LOW);
   delayMicroseconds(2);
   
-  // Sets the trigPin on HIGH state for 10 micro seconds
   digitalWrite(trigPin2, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin2, LOW);
   
-  // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin2, HIGH);
   
-  // Calculating the distance
   distance = duration * 0.034/2;
 
   return distance;
@@ -98,12 +89,10 @@ void reconnect() {
       Serial.print("fallo, rc=");
       Serial.print(client.state());
       Serial.println(" intenta nuevamente en 5 segundos");
-      // espera 5 segundos antes de reintentar
       delay(5000);
     }
     retries--;
     if (retries == 0) {
-      // esperar a que el WDT lo reinicie
       while (1);
     }
   }
@@ -138,13 +127,13 @@ String getTimeStampString() {
 
 void setup() {
   
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(trigPin, OUTPUT); s
+  pinMode(echoPin, INPUT); 
 
-  pinMode(trigPin2, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin2, INPUT); // Sets the echoPin as an Input
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT); 
 
-  Serial.begin(9600); // Starts the serial communication
+  Serial.begin(9600);
 
   WiFi.begin(ssid, password);
  
@@ -170,8 +159,6 @@ void setup() {
   }
 
   timeClient.begin(); 
-  client.publish("/user1/ultrasonic/1", "Hello from ESP8266-2");
-  client.publish("/user1/ultrasonic/2", "Hello from ESP8266-2");
   client.subscribe("/user1/ultrasonic/1");
   client.subscribe("/user1/ultrasonic/2");
 }
@@ -204,5 +191,5 @@ void loop() {
   client.publish("/user1/ultrasonic/1", charMessageUltrasonic1);
   client.publish("/user1/ultrasonic/2", charMessageUltrasonic2);  
   
-  delay(1000); 
+  delay(2000); 
 }

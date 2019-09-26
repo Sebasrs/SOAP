@@ -1,39 +1,44 @@
 let weight, ultrasonic1, ultrasonic2, rfid;
+let lastHour, lastDate;
 
 function  writeDataBase(history, employee) {
-  console.log(weight + " " + ultrasonic1 + " " + ultrasonic2 + " " + rfid);
 
   employee.findOne({id: rfid}, function(err, empl) {
-    if (err) throw err;
+    if (err) console.log(err);
 
     let newHistory = {
       employeeName: empl.name,
       soap: ultrasonic1,
       alcohol: ultrasonic2,
-      paper: weight
-    };
+      paper: weight,
+      date: lastDate,
+      hour: lastHour
+    }; 
 
     history.create(newHistory, function(err) {
-      if (err) throw err;
+      if (err) console.log(err);
       console.log('History created successfully.');
     });
   }); 
 }
 
 module.exports = (history, employee, topic, message) => {
+  let dataBaseInfo = message.toString().split(",");
 
   switch(topic){
     case "/user1/weight":
-      weight = message;
+      weight = dataBaseInfo[2];
       break;
     case "/user1/ultrasonic/1":
-      ultrasonic1 = message;
+      ultrasonic1 = dataBaseInfo[2];
       break;
     case "/user1/ultrasonic/2":
-      ultrasonic2 = message;
+      ultrasonic2 = dataBaseInfo[2];
       break;
     case "/user1/rfid":
-      rfid = message;
+      rfid = dataBaseInfo[2];
+      lastHour = dataBaseInfo[1];
+      lastDate = dataBaseInfo[0];
       writeDataBase(history, employee);
       break;
     default:

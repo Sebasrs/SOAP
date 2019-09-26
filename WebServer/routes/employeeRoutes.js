@@ -10,7 +10,7 @@ module.exports = (app, Employee) => {
     };
     
     Employee.create(newEmployee, function(err) {
-      if (err) throw err;
+      if (err) console.log(err);
       console.log('User created successfully.');
     });
 
@@ -19,7 +19,7 @@ module.exports = (app, Employee) => {
   
   app.get('/employee', (req, res) => {
     Employee.find({}, function(err, employee) {
-      if (err) throw err;
+      if (err) console.log(err);
 
       res.send(employee);
     })

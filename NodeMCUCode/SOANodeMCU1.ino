@@ -6,6 +6,7 @@
 #include <WiFiUdp.h>
 #include "HX711.h"
 
+
 const int LOADCELL_DOUT_PIN = D0;
 const int LOADCELL_SCK_PIN = D1;
 const int SS_PIN = D4;
@@ -37,7 +38,7 @@ unsigned long getID(){
     return -1;    
   }
   
-  if (! mfrc522.PICC_ReadCardSerial()) { //Since a PICC placed get Serial and continue
+  if (! mfrc522.PICC_ReadCardSerial()) {
     return -1;
   }
   
@@ -46,7 +47,7 @@ unsigned long getID(){
   hex_num += mfrc522.uid.uidByte[1] << 16;
   hex_num += mfrc522.uid.uidByte[2] <<  8;
   hex_num += mfrc522.uid.uidByte[3];
-  mfrc522.PICC_HaltA(); // Stop reading
+  mfrc522.PICC_HaltA();
   return hex_num;
 }
 
@@ -77,12 +78,10 @@ void reconnect() {
       Serial.print("fallo, rc=");
       Serial.print(client.state());
       Serial.println(" intenta nuevamente en 5 segundos");
-      // espera 5 segundos antes de reintentar
       delay(5000);
     }
     retries--;
     if (retries == 0) {
-      // esperar a que el WDT lo reinicie
       while (1);
     }
   }
@@ -117,16 +116,17 @@ String getTimeStampString() {
 
 void setup() {
    Serial.begin(9600);
-   SPI.begin();       // Init SPI bus
-   mfrc522.PCD_Init(); // Init MFRC522
+   SPI.begin();       
+   mfrc522.PCD_Init(); 
 
    pinMode(BUZZER_PIN, OUTPUT);
+   digitalWrite(BUZZER_PIN, LOW);
 
    loadcell.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
    loadcell.set_scale(calibration_factor);
    loadcell.tare();
 
-   WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
  
    while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -150,9 +150,7 @@ void setup() {
   }
 
   timeClient.begin(); 
-  client.publish("/user1/rfid", "Hello from ESP8266-1");
   client.subscribe("/user1/rfid");
-  client.publish("/user1/weight", "Hello from ESP8266-1");
   client.subscribe("/user1/weight");
 }
 
@@ -163,9 +161,9 @@ void loop() {
     reconnect();
   }
 
-  timeClient.update();  
   client.loop();
 
+  timeClient.update(); 
   
   unsigned long id = getID();  
   String timer = getTimeStampString();
@@ -176,7 +174,6 @@ void loop() {
     message.concat(id);
     message.toCharArray(charMessageRFID, 35);
     client.publish("/user1/rfid", charMessageRFID);
-    //Serial.println(charMessageRFID); 
     
     digitalWrite(BUZZER_PIN, HIGH);
     delay(100); 
@@ -189,9 +186,8 @@ void loop() {
     message.concat(",");
     message.concat(weight_value);
     message.toCharArray(charMessageWeight, 30);  
-    client.publish("/user1/weight", charMessageWeight);
-    //Serial.println(charMessageWeight);     
+    client.publish("/user1/weight", charMessageWeight);   
   } 
 
-  delay(1000);
+  delay(2000);
 }
