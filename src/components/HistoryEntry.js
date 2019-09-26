@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
  
 import Colors from '../constants/Colors';
 
 export default function TabBarIcon(props) {
   return (
-    <View>
+    <View style={ styles.historyEntry }>
       <Text>Empleado: {props.whoCleaned}</Text>
       <Text>Fecha: {props.date}</Text>
       <Text>Hora: {props.time}</Text>
@@ -16,3 +16,10 @@ export default function TabBarIcon(props) {
     </View>
   );
 }
+
+let styles = StyleSheet.create({
+  historyEntry : {
+    marginHorizontal : 5,
+    marginTop: 8
+  }
+}); 
