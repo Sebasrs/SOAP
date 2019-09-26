@@ -1,6 +1,4 @@
-/*This is an Example of Grid View in React Native*/
 import React, { Component } from 'react';
-//import rect in our project
 import {
   StyleSheet,
   View,
@@ -9,11 +7,13 @@ import {
   TouchableHighlight,
   Text
 } from 'react-native';
-//import all the components we will need
+import { Header } from 'react-native-elements';
+
 import Images from '../constants/Images';
+import Colors from '../constants/Colors';
 
 export default class GridStart extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,6 +32,11 @@ export default class GridStart extends Component {
   render() {
     return (
       <View style={styles.MainContainer}>
+        <Header
+          centerComponent={{ text: 'Bienvenido', style: { color: '#000', fontSize: 25, fontWeight: 'bold' }}}
+          barStyle = { 'dark-content' }
+          backgroundColor = { "#fefefe" }
+        />
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) => (
@@ -55,7 +60,6 @@ const styles = StyleSheet.create({
   MainContainer: {
     justifyContent: 'center',
     flex: 1,
-    paddingTop: 20
   },
   imageThumbnail: {
     height: 200,
@@ -64,12 +68,21 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     flexDirection: 'column',
-    margin: 1,
+    margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 0.5,
-    maxWidth:'50%'
+    maxWidth: '50%',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+
+    elevation: 11,
   },
   description: {
     fontWeight: 'bold',

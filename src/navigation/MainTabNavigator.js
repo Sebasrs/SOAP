@@ -1,10 +1,11 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import Colors from '../constants/Colors';
 
 import TabBarIcon from '../components/TabBarIcon';
-import History from '../screens/History';
-import Rfid from '../screens/Rfid';
+import RfidHistory from '../screens/RfidHistory';
 import SensorMain from '../screens/SensorMain';
 
 const config = Platform.select({
@@ -37,8 +38,7 @@ HomeStack.path = '';
 
 const HistoryStack = createStackNavigator(
   {
-    RFID : Rfid,
-    Historial : History 
+    RfidHistory: RfidHistory,
   },
   config
 );
@@ -52,10 +52,15 @@ HistoryStack.navigationOptions = {
 
 HistoryStack.path = '';
 
-const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  HistoryStack,
-});
+const tabNavigator = createMaterialBottomTabNavigator({
+    HomeStack,
+    HistoryStack,
+  },
+  {
+    activeColor: Colors.activeColor,
+    inactiveColor: Colors.inactiveColor,
+    barStyle: { backgroundColor: Colors.tabBar },
+  });
 
 tabNavigator.path = '';
 
