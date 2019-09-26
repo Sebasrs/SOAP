@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
 
-module.exports = () => {
+module.exports = (app, history, employee) => {
   var options = {
     port: 16331,
     host: 'mqtt://soldier.cloudmqtt.com',
@@ -18,7 +18,7 @@ module.exports = () => {
     client.subscribe('/user1/ultrasonic/2');
   }); 
 
-  client.on('message', function(topic, message, packet) {
-    console.log("Received '" + message + "' on '" + topic + "'");
-  });  
+  client.on('message', function(topic, message, packet) { 
+    require('./mqttDataBase')(history, employee, topic, message); 
+  });   
 };
