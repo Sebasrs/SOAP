@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, AsyncStorage, FlatList, Modal, TouchableHighlight, Button } from "react-native";
+import { View, StyleSheet, AsyncStorage, FlatList, Modal, TouchableOpacity, Button } from "react-native";
 import init from 'react_native_mqtt';
 import Images from '../constants/Images';
 import Colors from '../constants/Colors';
@@ -151,12 +151,13 @@ export default class SensorMain extends React.Component {
           data={items}
           renderItem={({ item }) => (
             <View style={{ flex: 1, flexDirection: 'column', margin: 10 }}>
-              <TouchableHighlight
+              <TouchableOpacity
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible, item.props.name);
-                }}>
+                }}
+              > 
                 {item}
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           )}
           //Setting the number of column

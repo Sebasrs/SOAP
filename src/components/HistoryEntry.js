@@ -19,7 +19,7 @@ export default function TabBarIcon(props) {
 
 let styles = StyleSheet.create({
   historyEntry : {
-    marginHorizontal : 5,
+    marginHorizontal : 10,
     marginTop: 8
   }
 }); 
