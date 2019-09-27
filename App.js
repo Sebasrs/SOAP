@@ -1,9 +1,7 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
-import * as Font from 'expo-font';
 import React, { useState } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 import AppNavigator from './src/navigation/AppNavigator';
 
@@ -36,16 +34,10 @@ async function loadResourcesAsync() {
       require('./src/assets/images/toothpaste.png'),
       require('./src/assets/images/toilet.png'),
     ]),
-    Font.loadAsync({
-      ...Ionicons.font,
-      'space-mono': require('./src/assets/fonts/SpaceMono-Regular.ttf'),
-    }),
   ]);
 }
 
 function handleLoadingError(error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
   console.warn(error);
 }
 
