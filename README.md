@@ -26,7 +26,7 @@ npm install -g expo-cli
 
 To run the web server:
 ```sh
-node ./WebServer index.js
+node index.js
 ```
 
 To run the react native:
